@@ -6,68 +6,68 @@ const BOT_DASHBOARD_URL = "https://bot.dropifybot.com";
 const howItWorksSteps = [
   {
     step: "01",
-    title: "Connect your Twitch",
-    body: "Authorize Dropify as a bot in your channel so it can listen for commands like !drop and !discount.",
+    title: "Connect Twitch + Shopify",
+    body: "Link your Twitch channel and Shopify store in the dashboard. Dropify joins your chat and is ready to create discounts in your store.",
   },
   {
     step: "02",
-    title: "Connect your Shopify store",
-    body: "Install the Dropify app in Shopify. We create single-use codes directly in your store when a drop happens.",
+    title: "Viewers claim personal codes",
+    body: "Viewers type !discount to get a unique single-use code. Dropify enforces per-viewer limits + cooldowns automatically.",
   },
   {
     step: "03",
-    title: "Go live & let chat farm codes",
-    body: "Viewers trigger drops in real time. Codes are unique, single-use and automatically synced with Shopify.",
+    title: "You trigger global drops",
+    body: "Only the streamer can run !drop 20 to create a stream-wide promo. Codes are created in Shopify instantly and sent back to chat.",
   },
 ];
 
 const features = [
   {
-    title: "Single-use discount codes",
-    body: "Every drop is a unique, one-time code created directly in your Shopify store. No code reuse, no leeching.",
+    title: "Viewer codes (single-use)",
+    body: "Viewers type !discount → they get a unique, one-time code created in your Shopify store. No reuse, no leaking, no copy-paste chaos.",
   },
   {
-    title: "Global & viewer drops",
-    body: "Reward a single viewer or drop a global blast for everyone in chat. Perfect for hype moments and milestones.",
+    title: "Streamer-only global drops",
+    body: "You control the hype moments. Only the broadcaster can run !drop 10–50 for a global discount across chat.",
+  },
+  {
+    title: "Plan limits you can trust",
+    body: "Atomic monthly counters prevent abuse and race conditions. Your dashboard shows live usage and when it resets.",
   },
   {
     title: "Abuse-resistant by design",
-    body: "Per-viewer limits, global cooldowns and minimum subtotal rules so your margins stay safe during chaos.",
+    body: "Cooldowns, per-viewer rules, and minimum subtotal protections keep your margins safe during spikes.",
   },
   {
-    title: "Live Twitch + Shopify overview",
-    body: "See connection health, active codes and revenue influenced in the last 24 hours at a glance.",
-  },
-  {
-    title: "Stream-first UX",
-    body: "Dashboard is tuned for streamers: simple toggles, clear defaults and copy that speaks the language of chat.",
+    title: "Live usage dashboard",
+    body: "See current plan, monthly usage bars, and reset timing. Upgrade via Stripe when you need higher limits.",
   },
   {
     title: "Zero code, no theme edits",
-    body: "No custom scripts, no theme hacking. Just OAuth into Twitch + Shopify and you’re ready.",
+    body: "No scripts, no theme hacking. OAuth Twitch + Shopify and you’re ready to drop codes on stream.",
   },
 ];
 
 const faqs = [
   {
-    q: "Is Dropify free?",
-    a: "While we’re in beta, Dropify is completely free for early streamers. We’ll introduce paid tiers later, but existing beta users will keep generous limits.",
+    q: "Who can use !drop?",
+    a: "Only the streamer (broadcaster) can trigger global drops with !drop. Viewers can only claim personal codes with !discount.",
+  },
+  {
+    q: "Do viewers get the same code?",
+    a: "No. Viewer codes are single-use and unique per viewer (and protected by cooldowns). That prevents reuse and sharing.",
+  },
+  {
+    q: "Is there a limit?",
+    a: "Yes. Dropify uses atomic monthly counters per plan (viewer drops + global drops). Your dashboard shows live usage and reset timing.",
   },
   {
     q: "Do I need to install anything on my PC?",
-    a: "No desktop app required. Dropify is a hosted bot. You just connect Twitch + Shopify in your browser and keep the bot in your channel.",
-  },
-  {
-    q: "What permissions does the Shopify app need?",
-    a: "Dropify only asks for scopes required to create and manage discount codes, plus basic store info to display in your dashboard.",
-  },
-  {
-    q: "Does Dropify work with any Twitch bot commands?",
-    a: "Dropify listens for its own commands like !drop and !discount. You can keep using Nightbot, Moobot, etc. alongside it.",
+    a: "No. Dropify is hosted. You connect Twitch + Shopify in the browser and the bot runs in your chat.",
   },
   {
     q: "What happens if my stream disconnects?",
-    a: "Your Shopify store and existing codes are safe. When you go live again, Dropify can auto-enable drops if you’ve toggled that option in settings.",
+    a: "Nothing breaks. Your Shopify store is safe. When you go live again, you can keep using commands immediately (and optionally auto-enable in settings).",
   },
 ];
 
@@ -92,22 +92,22 @@ export default function LandingPage() {
                 Dropify <span className="text-slate-400">bot</span>
               </span>
               <span className="text-[11px] uppercase tracking-[0.16em] text-slate-500">
-                Twitch → Shopify discounts
+                Twitch → Shopify discount automation
               </span>
             </div>
           </div>
 
           <nav className="hidden items-center gap-6 text-sm text-slate-300 md:flex">
-            <a href="#how-it-works" className="hover:text-slate-50 transition">
+            <a href="#how-it-works" className="transition hover:text-slate-50">
               How it works
             </a>
-            <a href="#features" className="hover:text-slate-50 transition">
+            <a href="#features" className="transition hover:text-slate-50">
               Features
             </a>
-            <a href="#pricing" className="hover:text-slate-50 transition">
+            <a href="#pricing" className="transition hover:text-slate-50">
               Pricing
             </a>
-            <a href="#faq" className="hover:text-slate-50 transition">
+            <a href="#faq" className="transition hover:text-slate-50">
               FAQ
             </a>
           </nav>
@@ -135,28 +135,28 @@ export default function LandingPage() {
           <div className="max-w-xl space-y-6">
             <div className="inline-flex items-center gap-2 rounded-full border border-violet-500/40 bg-slate-950/80 px-3 py-1 text-[11px] font-medium uppercase tracking-[0.16em] text-violet-200 shadow-sm shadow-violet-500/30">
               <span className="h-1.5 w-1.5 rounded-full bg-emerald-400" />
-              Live discount drops for real streams
+              Live chat → Shopify discounts
             </div>
 
             <h1 className="text-3xl font-semibold tracking-tight text-slate-50 sm:text-4xl lg:text-5xl">
-              Turn Twitch hype into{" "}
+              Turn chat spam into{" "}
               <span className="bg-gradient-to-r from-violet-400 via-emerald-300 to-cyan-300 bg-clip-text text-transparent">
-                real Shopify revenue
+                real Shopify sales
               </span>
               .
             </h1>
 
             <p className="text-sm leading-relaxed text-slate-300 sm:text-base">
-              Dropify listens to your Twitch chat and creates single-use Shopify
-              discount codes in real time when viewers trigger commands like{" "}
-              <code className="rounded-md bg-slate-900/80 px-1.5 py-0.5 text-[11px] font-mono text-violet-300">
-                !drop
-              </code>{" "}
-              or{" "}
+              Dropify automates discounts during stream. Viewers type{" "}
               <code className="rounded-md bg-slate-900/80 px-1.5 py-0.5 text-[11px] font-mono text-violet-300">
                 !discount
-              </code>
-              . No spreadsheets, no manual code juggling.
+              </code>{" "}
+              for a personal single-use code. You (the streamer) trigger hype
+              moments with{" "}
+              <code className="rounded-md bg-slate-900/80 px-1.5 py-0.5 text-[11px] font-mono text-violet-300">
+                !drop 20
+              </code>{" "}
+              for a global drop — without leaving your game.
             </p>
 
             <div className="flex flex-col gap-3 sm:flex-row sm:items-center">
@@ -164,7 +164,7 @@ export default function LandingPage() {
                 href={BOT_DASHBOARD_URL}
                 className="inline-flex items-center justify-center rounded-full bg-gradient-to-r from-violet-500 to-emerald-500 px-6 py-2.5 text-sm font-semibold text-slate-950 shadow-lg shadow-violet-500/40 hover:from-violet-400 hover:to-emerald-400"
               >
-                Launch Dropify bot
+                Launch Dropify
               </Link>
               <a
                 href="#demo"
@@ -173,24 +173,34 @@ export default function LandingPage() {
                 <span className="inline-flex h-8 w-8 items-center justify-center rounded-full border border-slate-700 bg-slate-900 text-xs">
                   ▶
                 </span>
-                Watch how a drop works
+                See the commands in action
               </a>
             </div>
 
+            <div className="flex flex-col gap-2 text-[12px] text-slate-500 sm:flex-row sm:items-center sm:gap-4">
+              <span className="inline-flex items-center gap-2">
+                <span className="h-1.5 w-1.5 rounded-full bg-emerald-400" />
+                Streamer-controlled global drops
+              </span>
+              <span className="hidden text-slate-700 sm:inline">•</span>
+              <span className="inline-flex items-center gap-2">
+                <span className="h-1.5 w-1.5 rounded-full bg-violet-400" />
+                Atomic monthly limits (no race conditions)
+              </span>
+            </div>
+
             <p className="text-[12px] text-slate-500">
-              Built for streamers. No credit card required while we&apos;re in
-              beta.
+              Start in minutes. Upgrade later when you need more drops.
             </p>
           </div>
 
-          {/* Right side: hero preview / mock dashboard */}
+          {/* Right side: hero preview */}
           <div className="relative flex flex-1 justify-end">
             <div className="relative w-full max-w-md rounded-3xl border border-slate-800/80 bg-slate-950/80 p-4 shadow-[0_18px_45px_rgba(15,23,42,0.9)] backdrop-blur">
               <div className="mb-3 flex items-center justify-between">
                 <div className="flex items-center gap-2 text-xs text-slate-400">
                   <span className="h-2 w-2 rounded-full bg-emerald-400" />
-                  Live preview ·{" "}
-                  <span className="font-mono text-slate-200">@yourchannel</span>
+                  Live · <span className="font-mono text-slate-200">@yourchannel</span>
                 </div>
                 <span className="rounded-full bg-slate-900 px-2 py-1 text-[10px] uppercase tracking-[0.16em] text-slate-400">
                   Dashboard
@@ -200,35 +210,35 @@ export default function LandingPage() {
               <div className="space-y-3">
                 <div className="rounded-2xl border border-slate-800 bg-gradient-to-br from-slate-900 to-slate-950 p-3">
                   <div className="mb-2 flex items-center justify-between text-[11px] text-slate-400">
-                    <span>Connection status</span>
+                    <span>Status</span>
                     <span className="inline-flex items-center gap-1 text-emerald-300">
                       <span className="h-1.5 w-1.5 rounded-full bg-emerald-400" />
-                      Twitch · Shopify connected
+                      Twitch + Shopify connected
                     </span>
                   </div>
                   <div className="grid grid-cols-3 gap-2 text-[11px] text-slate-300">
                     <div className="rounded-xl border border-slate-800 bg-slate-950/70 p-2">
                       <div className="text-[10px] uppercase tracking-wide text-slate-500">
-                        Active codes today
+                        Viewer drops
                       </div>
                       <div className="mt-1 text-sm font-semibold text-slate-50">
-                        14
+                        3 / 10
                       </div>
                     </div>
                     <div className="rounded-xl border border-slate-800 bg-slate-950/70 p-2">
                       <div className="text-[10px] uppercase tracking-wide text-slate-500">
-                        Redemption rate
+                        Global drops
                       </div>
                       <div className="mt-1 text-sm font-semibold text-emerald-300">
-                        32%
+                        2 / 10
                       </div>
                     </div>
                     <div className="rounded-xl border border-slate-800 bg-slate-950/70 p-2">
                       <div className="text-[10px] uppercase tracking-wide text-slate-500">
-                        Revenue (24h)
+                        Resets
                       </div>
                       <div className="mt-1 text-sm font-semibold text-violet-300">
-                        $184
+                        12d
                       </div>
                     </div>
                   </div>
@@ -236,33 +246,34 @@ export default function LandingPage() {
 
                 <div className="rounded-2xl border border-slate-800 bg-slate-950/80 p-3">
                   <div className="mb-2 flex items-center justify-between text-[11px] text-slate-400">
-                    <span>Recent drops</span>
-                    <span className="text-slate-500">Last 10</span>
+                    <span>Recent activity</span>
+                    <span className="text-slate-500">Live</span>
                   </div>
                   <div className="space-y-2 text-[11px]">
                     <div className="flex items-center justify-between rounded-xl border border-violet-500/40 bg-slate-950 px-3 py-2">
                       <div>
                         <div className="flex items-center gap-2">
                           <span className="font-semibold text-slate-100">
-                            dropifybot
+                            Viewer code
                           </span>
                           <span className="rounded-full bg-slate-900 px-2 py-0.5 text-[10px] uppercase tracking-wide text-slate-400">
-                            Viewer
+                            !discount
                           </span>
                         </div>
                         <div className="text-[10px] text-slate-500">
-                          @dropifybot • 51% off
+                          @viewer123 • 10% off
                         </div>
                       </div>
                       <div className="text-right">
                         <div className="font-mono text-[11px] text-violet-300">
-                          DROP-YOURVIEWER-7938
+                          DROP-VIEWER-5938
                         </div>
                         <div className="text-[10px] text-slate-500">
-                          3 seconds ago
+                          8s ago
                         </div>
                       </div>
                     </div>
+
                     <div className="flex items-center justify-between rounded-xl border border-slate-800 bg-slate-950 px-3 py-2">
                       <div>
                         <div className="flex items-center gap-2">
@@ -270,23 +281,33 @@ export default function LandingPage() {
                             Global drop
                           </span>
                           <span className="rounded-full bg-violet-900/60 px-2 py-0.5 text-[10px] uppercase tracking-wide text-violet-200">
-                            Global
+                            !drop
                           </span>
                         </div>
                         <div className="text-[10px] text-slate-500">
-                          Everyone in chat • 20% off
+                          Streamer activated • 20% off
                         </div>
                       </div>
                       <div className="text-right">
                         <div className="font-mono text-[11px] text-violet-300">
-                          DROP-STREAM-2024
+                          DROP-STREAM-2042
                         </div>
                         <div className="text-[10px] text-slate-500">
-                          2 mins ago
+                          2m ago
                         </div>
                       </div>
                     </div>
                   </div>
+                </div>
+
+                <div className="rounded-2xl border border-slate-800 bg-slate-950/80 p-3">
+                  <div className="flex items-center justify-between text-[11px] text-slate-400">
+                    <span>Upgrade anytime</span>
+                    <span className="text-slate-500">Stripe</span>
+                  </div>
+                  <p className="mt-2 text-[11px] text-slate-500">
+                    Upgrade from the dashboard to unlock higher monthly limits.
+                  </p>
                 </div>
               </div>
             </div>
@@ -296,7 +317,7 @@ export default function LandingPage() {
               <span className="mr-2 inline-flex h-5 w-5 items-center justify-center rounded-full bg-emerald-500/20 text-[10px]">
                 ⚡
               </span>
-              Single-use codes, dropped live.
+              Streamer controls the drops.
             </div>
           </div>
         </div>
@@ -314,12 +335,12 @@ export default function LandingPage() {
                 How Dropify works
               </p>
               <h2 className="mt-2 text-2xl font-semibold tracking-tight text-slate-50 sm:text-3xl">
-                From chat command to Shopify code in three steps.
+                From chat command to Shopify code — instantly.
               </h2>
             </div>
             <p className="max-w-md text-sm text-slate-400">
-              No webhooks to script, no theme edits. Dropify handles the full
-              flow from Twitch event → Shopify discount code → analytics.
+              Dropify handles the full flow: Twitch command → safety checks →
+              Shopify discount creation → live usage in your dashboard.
             </p>
           </div>
 
@@ -356,12 +377,12 @@ export default function LandingPage() {
                 Streamer-first feature set
               </p>
               <h2 className="mt-2 text-2xl font-semibold tracking-tight text-slate-50 sm:text-3xl">
-                Built to keep hype high and margins safe.
+                Keep hype high — and control tight.
               </h2>
             </div>
             <p className="max-w-md text-sm text-slate-400">
-              Every feature is designed around real stream flow: raids, hype
-              trains, scuffed disconnects and late-night grind sessions.
+              Designed for real streams: spikes, raids, hype trains, and chat
+              chaos — without giving chat control of your margins.
             </p>
           </div>
 
@@ -383,23 +404,19 @@ export default function LandingPage() {
       </section>
 
       {/* DEMO SECTION */}
-      <section
-        id="demo"
-        className="border-b border-slate-800/60 bg-slate-950/90"
-      >
+      <section id="demo" className="border-b border-slate-800/60 bg-slate-950/90">
         <div className="mx-auto max-w-6xl px-6 py-12 lg:px-8 lg:py-16">
           <div className="mb-6 flex flex-col gap-3 md:flex-row md:items-end md:justify-between">
             <div>
               <p className="text-[11px] font-medium uppercase tracking-[0.16em] text-violet-300">
-                Live demo concept
+                Commands in action
               </p>
               <h2 className="mt-2 text-2xl font-semibold tracking-tight text-slate-50 sm:text-3xl">
-                Imagine this running in your chat.
+                This is what it feels like on stream.
               </h2>
             </div>
             <p className="max-w-md text-sm text-slate-400">
-              Soon you&apos;ll be able to embed a live demo directly here. For
-              now, this mock shows what a typical Dropify moment looks like.
+              A clean mental model: viewers claim personal codes, streamer triggers global drops.
             </p>
           </div>
 
@@ -414,41 +431,50 @@ export default function LandingPage() {
               </div>
               <div className="space-y-2 rounded-2xl border border-slate-800 bg-slate-950/80 p-3 text-[12px] leading-relaxed text-slate-200">
                 <p>
-                  <span className="font-semibold text-emerald-300">
-                    viewer123
-                  </span>{" "}
-                  <span className="text-slate-400">:</span> yo this boss is
-                  crazy 😳
+                  <span className="font-semibold text-emerald-300">viewer123</span>{" "}
+                  <span className="text-slate-400">:</span> yo this boss is crazy 😳
                 </p>
                 <p>
-                  <span className="font-semibold text-sky-300">
-                    mod_sarah
-                  </span>{" "}
-                  <span className="text-slate-400">:</span> if Musa wipes we all
-                  spam{" "}
+                  <span className="font-semibold text-sky-300">mod_sarah</span>{" "}
+                  <span className="text-slate-400">:</span> if Musa wipes we all spam{" "}
                   <code className="rounded bg-slate-900 px-1 font-mono text-[11px] text-violet-300">
                     !discount
                   </code>
                 </p>
                 <p>
-                  <span className="font-semibold text-pink-300">
-                    hype_frog
-                  </span>{" "}
-                  <span className="text-slate-400">:</span> !drop 20
+                  <span className="font-semibold text-emerald-300">viewer123</span>{" "}
+                  <span className="text-slate-400">:</span>{" "}
+                  <code className="rounded bg-slate-900 px-1 font-mono text-[11px] text-violet-300">
+                    !discount
+                  </code>
                 </p>
+
                 <div className="mt-2 rounded-2xl border border-violet-500/50 bg-gradient-to-r from-violet-600/60 via-violet-500/60 to-emerald-500/70 px-3 py-2 text-[11px] font-medium text-slate-950 shadow-lg shadow-violet-500/40">
-                  <span className="mr-1">🎉</span> Dropify dropped a{" "}
-                  <span className="font-semibold">20% OFF</span> code for{" "}
-                  <span className="font-mono">hype_frog</span> ·{" "}
-                  <span className="font-mono">DROP-HYPEFROG-2042</span>{" "}
-                  (single-use, expires in 15 minutes).
+                  <span className="mr-1">🎁</span> Dropify created a{" "}
+                  <span className="font-semibold">single-use</span> code for{" "}
+                  <span className="font-mono">viewer123</span> ·{" "}
+                  <span className="font-mono">DROP-VIEWER123-2042</span>{" "}
+                  (expires in ~10 minutes)
                 </div>
+
+                <p>
+                  <span className="font-semibold text-amber-300">yourchannel</span>{" "}
+                  <span className="text-slate-400">:</span>{" "}
+                  <code className="rounded bg-slate-900 px-1 font-mono text-[11px] text-violet-300">
+                    !drop 20
+                  </code>
+                </p>
+
+                <div className="rounded-2xl border border-emerald-500/40 bg-emerald-500/10 px-3 py-2 text-[11px] font-medium text-emerald-100">
+                  <span className="mr-1">🔥</span> GLOBAL DROP ACTIVATED —{" "}
+                  <span className="font-semibold">20% OFF</span> · Code{" "}
+                  <span className="font-mono text-emerald-200">DROPIFYBOT20-8752</span>{" "}
+                  (10 minutes)
+                </div>
+
                 <p className="text-slate-400">
-                  <span className="font-semibold text-emerald-300">
-                    hype_frog
-                  </span>{" "}
-                  <span className="text-slate-400">:</span> yo it worked 😭
-                  tytyty
+                  <span className="font-semibold text-emerald-300">viewer123</span>{" "}
+                  <span className="text-slate-400">:</span> yo it worked 😭 tytyty
                 </p>
               </div>
             </div>
@@ -463,36 +489,32 @@ export default function LandingPage() {
                   <span className="mr-2 rounded-full bg-slate-900 px-2 py-0.5 text-[10px] font-semibold text-slate-300">
                     1
                   </span>
-                  Viewer triggers a command in chat (
-                  <code className="text-[11px] font-mono text-violet-300">
-                    !drop 20
-                  </code>
-                  ).
+                  Viewer claims a personal code with{" "}
+                  <code className="text-[11px] font-mono text-violet-300">!discount</code>.
                 </li>
                 <li>
                   <span className="mr-2 rounded-full bg-slate-900 px-2 py-0.5 text-[10px] font-semibold text-slate-300">
                     2
                   </span>
-                  Dropify validates cooldowns, limits and your pricing rules.
+                  Dropify checks cooldowns, per-viewer rules, and monthly plan limits (atomically).
                 </li>
                 <li>
                   <span className="mr-2 rounded-full bg-slate-900 px-2 py-0.5 text-[10px] font-semibold text-slate-300">
                     3
                   </span>
-                  A unique, single-use discount code is created in Shopify and
-                  instantly sent back into chat.
+                  A single-use discount code is created in Shopify and posted back to chat instantly.
                 </li>
                 <li>
                   <span className="mr-2 rounded-full bg-slate-900 px-2 py-0.5 text-[10px] font-semibold text-slate-300">
                     4
                   </span>
-                  Redemptions + revenue influenced show up in your dashboard so
-                  you can see what actually moved product.
+                  Streamer triggers a global drop with{" "}
+                  <code className="text-[11px] font-mono text-violet-300">!drop 20</code>{" "}
+                  (streamer-only), and usage updates live in the dashboard.
                 </li>
               </ol>
               <p className="pt-1 text-xs text-slate-500">
-                When we ship the live demo, you&apos;ll be able to test commands
-                in a sandbox chat directly on this page.
+                Next up: embed a live sandbox demo on this page so you can test commands without going live.
               </p>
             </div>
           </div>
@@ -500,90 +522,107 @@ export default function LandingPage() {
       </section>
 
       {/* PRICING */}
-      <section
-        id="pricing"
-        className="border-b border-slate-800/60 bg-slate-950/95"
-      >
+      <section id="pricing" className="border-b border-slate-800/60 bg-slate-950/95">
         <div className="mx-auto max-w-6xl px-6 py-12 lg:px-8 lg:py-16">
           <div className="mb-8 text-center">
             <p className="text-[11px] font-medium uppercase tracking-[0.16em] text-violet-300">
               Pricing
             </p>
             <h2 className="mt-2 text-2xl font-semibold tracking-tight text-slate-50 sm:text-3xl">
-              Free while we&apos;re in beta.
+              Start free. Upgrade when you scale.
             </h2>
-            <p className="mt-3 text-sm text-slate-400 sm:max-w-md sm:mx-auto">
-              We&apos;re working closely with early creators to harden the bot,
-              APIs and dashboards. Join now, help shape Dropify and keep
-              generous limits when paid tiers launch.
+            <p className="mt-3 text-sm text-slate-400 sm:mx-auto sm:max-w-md">
+              Dropify is live and plan-limited. Your dashboard shows monthly usage and reset timing. Upgrade via Stripe when you need more drops.
             </p>
           </div>
 
-          <div className="mx-auto grid max-w-4xl gap-6 md:grid-cols-[minmax(0,1.1fr)_minmax(0,0.9fr)]">
-            {/* Beta plan */}
+          <div className="mx-auto grid max-w-4xl gap-6 md:grid-cols-3">
+            {/* Free */}
+            <div className="rounded-3xl border border-slate-800 bg-slate-950/80 p-6">
+              <h3 className="text-sm font-semibold text-slate-100">Free</h3>
+              <p className="mt-2 text-sm text-slate-400">For small streams and testing.</p>
+              <div className="mt-4 flex items-end gap-2">
+                <span className="text-3xl font-semibold text-slate-50">$0</span>
+                <span className="text-xs text-slate-400">/ month</span>
+              </div>
+              <ul className="mt-4 space-y-2 text-sm text-slate-300">
+                <li>· Viewer drops: 10 / month</li>
+                <li>· Global drops: 10 / month</li>
+                <li>· Core cooldown + safety rules</li>
+                <li>· Live usage dashboard</li>
+              </ul>
+              <div className="mt-6">
+                <Link
+                  href={BOT_DASHBOARD_URL}
+                  className="inline-flex w-full items-center justify-center rounded-full border border-slate-700 bg-slate-950 px-5 py-2.5 text-sm font-semibold text-slate-100 hover:border-slate-500 hover:text-slate-50"
+                >
+                  Get started
+                </Link>
+              </div>
+            </div>
+
+            {/* Pro */}
             <div className="relative overflow-hidden rounded-3xl border border-violet-500/60 bg-slate-950/90 p-6 shadow-[0_20px_60px_rgba(88,28,135,0.6)]">
-              <div className="mb-4 flex items-center justify-between">
-                <div>
-                  <h3 className="text-sm font-semibold text-slate-50">
-                    Creator beta
-                  </h3>
-                  <p className="text-xs text-slate-400">
-                    Everything you need to start dropping codes on stream.
-                  </p>
-                </div>
-                <span className="rounded-full bg-violet-500/20 px-3 py-1 text-[11px] font-semibold uppercase tracking-[0.16em] text-violet-100">
-                  Current plan
-                </span>
+              <div className="mb-2 inline-flex items-center gap-2 rounded-full bg-violet-500/15 px-3 py-1 text-[11px] font-semibold uppercase tracking-[0.16em] text-violet-200">
+                Most popular
               </div>
-              <div className="mb-4 flex items-end gap-2">
-                <span className="text-3xl font-semibold text-slate-50">
-                  Free
-                </span>
-                <span className="text-xs text-slate-400">during beta</span>
+              <h3 className="mt-2 text-sm font-semibold text-slate-50">Pro</h3>
+              <p className="mt-2 text-sm text-slate-400">
+                For growing streams that run drops regularly.
+              </p>
+              <div className="mt-4 flex items-end gap-2">
+                <span className="text-3xl font-semibold text-slate-50">$9</span>
+                <span className="text-xs text-slate-400">/ month</span>
               </div>
-              <ul className="space-y-2 text-sm text-slate-200">
-                <li>· Single-use viewer & global drops</li>
-                <li>· Twitch + Shopify connections</li>
-                <li>· Core safety limits & cooldowns</li>
-                <li>· Basic 24h revenue & redemption stats</li>
-                <li>· Early access to new features</li>
+              <ul className="mt-4 space-y-2 text-sm text-slate-200">
+                <li>· Viewer drops: 500 / month</li>
+                <li>· Global drops: 30 / month</li>
+                <li>· Stripe billing + upgrades in dashboard</li>
+                <li>· Live usage + reset timing</li>
               </ul>
               <div className="mt-6">
                 <Link
                   href={BOT_DASHBOARD_URL}
                   className="inline-flex w-full items-center justify-center rounded-full bg-gradient-to-r from-violet-500 to-emerald-500 px-5 py-2.5 text-sm font-semibold text-slate-950 shadow-lg shadow-violet-500/40 hover:from-violet-400 hover:to-emerald-400"
                 >
-                  Start free with Dropify
+                  Go Pro
                 </Link>
                 <p className="mt-2 text-[11px] text-slate-500">
-                  No credit card required. We&apos;ll email you well before any
-                  paid plans roll out.
+                  Upgrade in seconds. Cancel anytime.
                 </p>
               </div>
             </div>
 
-            {/* Future Pro plan */}
+            {/* Creator */}
             <div className="rounded-3xl border border-slate-800 bg-slate-950/80 p-6">
-              <h3 className="text-sm font-semibold text-slate-100">
-                Pro tiers (coming soon)
-              </h3>
+              <h3 className="text-sm font-semibold text-slate-100">Creator</h3>
               <p className="mt-2 text-sm text-slate-400">
-                We&apos;re designing higher-volume plans for partner-level
-                streamers and brands that need more drops, more analytics and
-                more control.
+                For high-volume drops + no global cap.
               </p>
+              <div className="mt-4 flex items-end gap-2">
+                <span className="text-3xl font-semibold text-slate-50">$29</span>
+                <span className="text-xs text-slate-400">/ month</span>
+              </div>
               <ul className="mt-4 space-y-2 text-sm text-slate-300">
-                <li>· Higher monthly drop & redemption limits</li>
-                <li>· Deeper revenue & cohort analytics</li>
-                <li>· Priority support and onboarding</li>
-                <li>· Whitelabel & campaign tracking options</li>
+                <li>· Viewer drops: 3000 / month</li>
+                <li>· Global drops: Unlimited</li>
+                <li>· Built for daily streams + launches</li>
+                <li>· Live usage + reset timing</li>
               </ul>
-              <p className="mt-4 text-xs text-slate-500">
-                If you already know you&apos;ll need this, you can still start
-                on the free creator beta today and grow into higher tiers later.
-              </p>
+              <div className="mt-6">
+                <Link
+                  href={BOT_DASHBOARD_URL}
+                  className="inline-flex w-full items-center justify-center rounded-full border border-slate-700 bg-slate-950 px-5 py-2.5 text-sm font-semibold text-slate-100 hover:border-slate-500 hover:text-slate-50"
+                >
+                  Go Creator
+                </Link>
+              </div>
             </div>
           </div>
+
+          <p className="mt-6 text-center text-[12px] text-slate-500">
+            Pricing shown as example — final amounts may change. Your dashboard always shows your current limits.
+          </p>
         </div>
       </section>
 
@@ -595,7 +634,7 @@ export default function LandingPage() {
               FAQ
             </p>
             <h2 className="mt-2 text-2xl font-semibold tracking-tight text-slate-50 sm:text-3xl">
-              Questions streamers usually ask.
+              Quick answers.
             </h2>
           </div>
 
@@ -627,7 +666,7 @@ export default function LandingPage() {
                 D
               </span>
             </span>
-            <span>Dropify bot · Twitch → Shopify drops</span>
+            <span>Dropify bot · Twitch → Shopify discount automation</span>
           </div>
           <div className="flex flex-wrap items-center gap-4">
             <span>© {new Date().getFullYear()} Dropify. All rights reserved.</span>
