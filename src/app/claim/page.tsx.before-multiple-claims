@@ -1,0 +1,782 @@
+"use client";
+
+import {
+  useCallback,
+  useEffect,
+  useState,
+  type CSSProperties,
+} from "react";
+
+const API_URL =
+  process.env.NEXT_PUBLIC_API_URL ||
+  "https://api.dropifybot.com";
+
+type Viewer = {
+  twitchId: string;
+  login: string;
+  displayName?: string;
+  profileImageUrl?: string | null;
+};
+
+type PendingClaim = {
+  status: "pending" | "processing";
+  viewerLogin: string;
+  viewerDisplayName?: string;
+  expiresAt: string;
+  streamer: {
+    twitchLogin: string;
+    displayName: string;
+  };
+};
+
+type Discount = {
+  code: string;
+  type?: string;
+  value?: number;
+  expiresAt: string;
+};
+
+type Screen =
+  | "loading"
+  | "anonymous"
+  | "checking"
+  | "ready"
+  | "processing"
+  | "no_claim"
+  | "success"
+  | "error";
+
+const styles: Record<string, CSSProperties> = {
+  page: {
+    minHeight: "100vh",
+    display: "flex",
+    alignItems: "center",
+    justifyContent: "center",
+    padding: "24px",
+    background:
+      "radial-gradient(circle at top, #25134d 0%, #10091f 42%, #07050d 100%)",
+    color: "#ffffff",
+    fontFamily: "Arial, Helvetica, sans-serif",
+  },
+
+  card: {
+    width: "100%",
+    maxWidth: "520px",
+    padding: "40px",
+    borderRadius: "24px",
+    background: "rgba(18, 13, 31, 0.96)",
+    border: "1px solid rgba(255, 255, 255, 0.12)",
+    boxShadow: "0 24px 80px rgba(0, 0, 0, 0.45)",
+    textAlign: "center",
+  },
+
+  logo: {
+    marginBottom: "28px",
+    fontSize: "24px",
+    fontWeight: 800,
+  },
+
+  purple: {
+    color: "#a970ff",
+  },
+
+  badge: {
+    display: "inline-block",
+    marginBottom: "18px",
+    padding: "7px 12px",
+    borderRadius: "999px",
+    background: "rgba(169, 112, 255, 0.14)",
+    border: "1px solid rgba(169, 112, 255, 0.35)",
+    color: "#c9a7ff",
+    fontSize: "13px",
+    fontWeight: 700,
+    textTransform: "uppercase",
+  },
+
+  successBadge: {
+    display: "inline-block",
+    marginBottom: "18px",
+    padding: "7px 12px",
+    borderRadius: "999px",
+    background: "rgba(72, 187, 120, 0.14)",
+    border: "1px solid rgba(72, 187, 120, 0.35)",
+    color: "#8ce6ae",
+    fontSize: "13px",
+    fontWeight: 700,
+    textTransform: "uppercase",
+  },
+
+  heading: {
+    margin: "0 0 14px",
+    fontSize: "36px",
+    lineHeight: 1.1,
+  },
+
+  description: {
+    margin: "0 auto 26px",
+    color: "#c7c2d3",
+    fontSize: "16px",
+    lineHeight: 1.65,
+  },
+
+  box: {
+    marginBottom: "22px",
+    padding: "18px",
+    borderRadius: "14px",
+    background: "rgba(255, 255, 255, 0.05)",
+    border: "1px solid rgba(255, 255, 255, 0.09)",
+  },
+
+  boxLabel: {
+    margin: "0 0 7px",
+    color: "#aaa4b7",
+    fontSize: "13px",
+  },
+
+  boxValue: {
+    margin: 0,
+    color: "#ffffff",
+    fontSize: "20px",
+    fontWeight: 800,
+  },
+
+  errorBox: {
+    marginBottom: "22px",
+    padding: "15px",
+    borderRadius: "12px",
+    background: "rgba(245, 101, 101, 0.1)",
+    border: "1px solid rgba(245, 101, 101, 0.3)",
+    color: "#ffb0b0",
+    fontSize: "14px",
+    lineHeight: 1.5,
+  },
+
+  codeBox: {
+    marginBottom: "22px",
+    padding: "22px",
+    borderRadius: "14px",
+    background: "rgba(72, 187, 120, 0.09)",
+    border: "1px solid rgba(72, 187, 120, 0.3)",
+  },
+
+  code: {
+    margin: "8px 0",
+    fontSize: "27px",
+    fontWeight: 900,
+    letterSpacing: "1px",
+    overflowWrap: "anywhere",
+  },
+
+  primaryButton: {
+    display: "block",
+    width: "100%",
+    boxSizing: "border-box",
+    padding: "15px 20px",
+    border: 0,
+    borderRadius: "12px",
+    background: "#9147ff",
+    color: "#ffffff",
+    fontSize: "16px",
+    fontWeight: 800,
+    textAlign: "center",
+    textDecoration: "none",
+    cursor: "pointer",
+  },
+
+  secondaryButton: {
+    width: "100%",
+    marginTop: "12px",
+    padding: "13px 20px",
+    borderRadius: "12px",
+    background: "transparent",
+    border: "1px solid rgba(255, 255, 255, 0.18)",
+    color: "#d2cddc",
+    fontSize: "14px",
+    fontWeight: 700,
+    cursor: "pointer",
+  },
+
+  disabledButton: {
+    width: "100%",
+    padding: "15px 20px",
+    border: 0,
+    borderRadius: "12px",
+    background: "#7040b8",
+    color: "#d5c7e8",
+    fontSize: "16px",
+    fontWeight: 800,
+    cursor: "not-allowed",
+    opacity: 0.72,
+  },
+
+  note: {
+    margin: "12px 0 0",
+    color: "#938da0",
+    fontSize: "12px",
+    lineHeight: 1.5,
+  },
+
+  footerLink: {
+    display: "inline-block",
+    marginTop: "25px",
+    color: "#b68cff",
+    fontSize: "14px",
+    textDecoration: "none",
+  },
+};
+
+function getErrorMessage(
+  data: unknown,
+  fallback: string
+) {
+  if (
+    data &&
+    typeof data === "object"
+  ) {
+    const object =
+      data as Record<string, unknown>;
+
+    if (
+      typeof object.message === "string"
+    ) {
+      return object.message;
+    }
+
+    if (
+      typeof object.error === "string"
+    ) {
+      return object.error;
+    }
+  }
+
+  return fallback;
+}
+
+export default function ClaimPage() {
+  const [screen, setScreen] =
+    useState<Screen>("loading");
+
+  const [viewer, setViewer] =
+    useState<Viewer | null>(null);
+
+  const [claim, setClaim] =
+    useState<PendingClaim | null>(null);
+
+  const [discount, setDiscount] =
+    useState<Discount | null>(null);
+
+  const [errorMessage, setErrorMessage] =
+    useState("");
+
+  const [copied, setCopied] =
+    useState(false);
+
+  const twitchLoginUrl =
+    `${API_URL}/api/auth/viewer/twitch/login`;
+
+  const loadPendingClaim =
+    useCallback(async () => {
+      setScreen("checking");
+      setErrorMessage("");
+
+      try {
+        const response = await fetch(
+          `${API_URL}/api/claims/pending`,
+          {
+            method: "GET",
+            credentials: "include",
+            cache: "no-store",
+            headers: {
+              Accept: "application/json",
+            },
+          }
+        );
+
+        const data =
+          await response
+            .json()
+            .catch(() => null);
+
+        if (response.status === 401) {
+          setViewer(null);
+          setClaim(null);
+          setScreen("anonymous");
+          return;
+        }
+
+        if (response.status === 404) {
+          setClaim(null);
+          setErrorMessage(
+            getErrorMessage(
+              data,
+              "No active discount claim was found for this Twitch account."
+            )
+          );
+          setScreen("no_claim");
+          return;
+        }
+
+        if (
+          !response.ok ||
+          !data?.ok ||
+          !data?.claim
+        ) {
+          throw new Error(
+            getErrorMessage(
+              data,
+              "Unable to check your pending claim."
+            )
+          );
+        }
+
+        setClaim(data.claim);
+
+        if (
+          data.claim.status ===
+          "processing"
+        ) {
+          setScreen("processing");
+        } else {
+          setScreen("ready");
+        }
+      } catch (error) {
+        setErrorMessage(
+          error instanceof Error
+            ? error.message
+            : "Unable to check your pending claim."
+        );
+
+        setScreen("error");
+      }
+    }, []);
+
+  useEffect(() => {
+    let cancelled = false;
+
+    async function start() {
+      try {
+        const response = await fetch(
+          `${API_URL}/api/auth/viewer/me`,
+          {
+            method: "GET",
+            credentials: "include",
+            cache: "no-store",
+            headers: {
+              Accept: "application/json",
+            },
+          }
+        );
+
+        if (cancelled) {
+          return;
+        }
+
+        if (response.status === 401) {
+          setScreen("anonymous");
+          return;
+        }
+
+        const data =
+          await response.json();
+
+        if (
+          !response.ok ||
+          data?.authenticated !== true ||
+          !data?.viewer
+        ) {
+          throw new Error(
+            "Unable to verify your Twitch session."
+          );
+        }
+
+        setViewer(data.viewer);
+
+        await loadPendingClaim();
+      } catch (error) {
+        if (!cancelled) {
+          setErrorMessage(
+            error instanceof Error
+              ? error.message
+              : "Unable to verify your Twitch session."
+          );
+
+          setScreen("error");
+        }
+      }
+    }
+
+    void start();
+
+    return () => {
+      cancelled = true;
+    };
+  }, [loadPendingClaim]);
+
+  async function redeemDiscount() {
+    if (!claim) {
+      return;
+    }
+
+    setScreen("processing");
+    setErrorMessage("");
+
+    try {
+      const response = await fetch(
+        `${API_URL}/api/claims/redeem`,
+        {
+          method: "POST",
+          credentials: "include",
+          headers: {
+            Accept: "application/json",
+            "Content-Type":
+              "application/json",
+          },
+          body: JSON.stringify({}),
+        }
+      );
+
+      const data =
+        await response
+          .json()
+          .catch(() => null);
+
+      if (
+        !response.ok ||
+        !data?.ok ||
+        !data?.discount
+      ) {
+        throw new Error(
+          getErrorMessage(
+            data,
+            "Unable to generate your discount."
+          )
+        );
+      }
+
+      setDiscount(data.discount);
+      setScreen("success");
+    } catch (error) {
+      setErrorMessage(
+        error instanceof Error
+          ? error.message
+          : "Unable to generate your discount."
+      );
+
+      setScreen("error");
+    }
+  }
+
+  async function switchAccount() {
+    try {
+      await fetch(
+        `${API_URL}/api/auth/viewer/logout`,
+        {
+          method: "POST",
+          credentials: "include",
+          headers: {
+            "Content-Type":
+              "application/json",
+          },
+          body: JSON.stringify({}),
+        }
+      );
+    } finally {
+      window.location.assign(
+        twitchLoginUrl
+      );
+    }
+  }
+
+  async function copyCode() {
+    if (!discount?.code) {
+      return;
+    }
+
+    await navigator.clipboard.writeText(
+      discount.code
+    );
+
+    setCopied(true);
+
+    window.setTimeout(() => {
+      setCopied(false);
+    }, 2000);
+  }
+
+  const viewerName =
+    viewer?.displayName ||
+    viewer?.login;
+
+  return (
+    <main style={styles.page}>
+      <section style={styles.card}>
+        <div style={styles.logo}>
+          Dropify
+          <span style={styles.purple}>
+            Bot
+          </span>
+        </div>
+
+        {screen === "success" ? (
+          <div style={styles.successBadge}>
+            Discount ready
+          </div>
+        ) : (
+          <div style={styles.badge}>
+            Private discount
+          </div>
+        )}
+
+        {(screen === "loading" ||
+          screen === "checking") && (
+          <>
+            <h1 style={styles.heading}>
+              Checking your discount
+            </h1>
+
+            <p style={styles.description}>
+              DropifyBot is verifying your
+              Twitch account and looking for
+              your pending claim.
+            </p>
+
+            <button
+              type="button"
+              disabled
+              style={styles.disabledButton}
+            >
+              Checking…
+            </button>
+          </>
+        )}
+
+        {screen === "anonymous" && (
+          <>
+            <h1 style={styles.heading}>
+              Claim your discount
+            </h1>
+
+            <p style={styles.description}>
+              Sign in with Twitch so
+              DropifyBot can confirm that the
+              discount belongs to you.
+            </p>
+
+            <a
+              href={twitchLoginUrl}
+              style={styles.primaryButton}
+            >
+              Continue with Twitch
+            </a>
+
+            <p style={styles.note}>
+              DropifyBot never receives your
+              Twitch password.
+            </p>
+          </>
+        )}
+
+        {screen === "ready" &&
+          viewer &&
+          claim && (
+            <>
+              <h1 style={styles.heading}>
+                Your discount is ready
+              </h1>
+
+              <p style={styles.description}>
+                We found a private claim for
+                your verified Twitch account.
+              </p>
+
+              <div style={styles.box}>
+                <p style={styles.boxLabel}>
+                  Signed in as
+                </p>
+
+                <p style={styles.boxValue}>
+                  @{viewerName}
+                </p>
+              </div>
+
+              <div style={styles.box}>
+                <p style={styles.boxLabel}>
+                  Discount from
+                </p>
+
+                <p style={styles.boxValue}>
+                  {claim.streamer.displayName}
+                </p>
+              </div>
+
+              <button
+                type="button"
+                style={styles.primaryButton}
+                onClick={redeemDiscount}
+              >
+                Claim discount
+              </button>
+
+              <button
+                type="button"
+                style={styles.secondaryButton}
+                onClick={switchAccount}
+              >
+                Switch Twitch account
+              </button>
+            </>
+          )}
+
+        {screen === "processing" && (
+          <>
+            <h1 style={styles.heading}>
+              Preparing your discount
+            </h1>
+
+            <p style={styles.description}>
+              DropifyBot is securely creating
+              your Shopify discount.
+            </p>
+
+            <button
+              type="button"
+              disabled
+              style={styles.disabledButton}
+            >
+              Please wait…
+            </button>
+
+            <button
+              type="button"
+              style={styles.secondaryButton}
+              onClick={loadPendingClaim}
+            >
+              Check status
+            </button>
+          </>
+        )}
+
+        {screen === "no_claim" &&
+          viewer && (
+            <>
+              <h1 style={styles.heading}>
+                No pending discount
+              </h1>
+
+              <div style={styles.box}>
+                <p style={styles.boxLabel}>
+                  Signed in as
+                </p>
+
+                <p style={styles.boxValue}>
+                  @{viewerName}
+                </p>
+              </div>
+
+              <div style={styles.errorBox}>
+                {errorMessage}
+              </div>
+
+              <p style={styles.description}>
+                Type <strong>!discount</strong>{" "}
+                in the streamer&apos;s Twitch
+                chat using this same account,
+                then check again.
+              </p>
+
+              <button
+                type="button"
+                style={styles.primaryButton}
+                onClick={loadPendingClaim}
+              >
+                Check again
+              </button>
+
+              <button
+                type="button"
+                style={styles.secondaryButton}
+                onClick={switchAccount}
+              >
+                Switch Twitch account
+              </button>
+            </>
+          )}
+
+        {screen === "success" &&
+          discount && (
+            <>
+              <h1 style={styles.heading}>
+                Discount claimed
+              </h1>
+
+              <p style={styles.description}>
+                Your private Shopify discount
+                was created successfully.
+              </p>
+
+              <div style={styles.codeBox}>
+                <p style={styles.boxLabel}>
+                  Your discount code
+                </p>
+
+                <p style={styles.code}>
+                  {discount.code}
+                </p>
+              </div>
+
+              <button
+                type="button"
+                style={styles.primaryButton}
+                onClick={copyCode}
+              >
+                {copied
+                  ? "Copied!"
+                  : "Copy discount code"}
+              </button>
+
+              <p style={styles.note}>
+                This code is valid for about
+                ten minutes. Do not share it.
+              </p>
+            </>
+          )}
+
+        {screen === "error" && (
+          <>
+            <h1 style={styles.heading}>
+              Something went wrong
+            </h1>
+
+            <div style={styles.errorBox}>
+              {errorMessage ||
+                "DropifyBot could not complete your request."}
+            </div>
+
+            <button
+              type="button"
+              style={styles.primaryButton}
+              onClick={loadPendingClaim}
+            >
+              Try again
+            </button>
+
+            <button
+              type="button"
+              style={styles.secondaryButton}
+              onClick={switchAccount}
+            >
+              Switch Twitch account
+            </button>
+          </>
+        )}
+
+        <a
+          href="/"
+          style={styles.footerLink}
+        >
+          Return to DropifyBot
+        </a>
+      </section>
+    </main>
+  );
+}
